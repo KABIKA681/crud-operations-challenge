@@ -30,4 +30,26 @@ async function getProduct(req, res, id) {
     }
 }
 
+//CREATE A POST 
+//POST REQUEST 
+async function createProduct(req, res) {
+    try {
+        const product = {
+            title: 'Test Product',
+            description: 'This is my product',
+            price: 100
+        }
+        
+        const newProduct = Product.create(product)
+        res.writeHead(201, { 'Content-Type' : 'Application/json '})
+        return res.end(JSON.stringify(newProduct))
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+
+
 module.exports = { getProducts, getProduct }

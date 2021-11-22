@@ -5,7 +5,11 @@ const { getProducts } = require('./controllers/productsController')
 const server = http.createServer((req, res) => {
     if (req.url === '/api/products' && req.method === 'GET') {
         getProducts(req, res)
-    } else {
+    } else if {
+        
+    }
+    
+    else {
         res.writeHead(404, { 'Content-Type': 'application/json' })
         res.end(JSON.stringify({ message: 'Page not found' }))
     }

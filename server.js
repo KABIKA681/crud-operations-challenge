@@ -5,7 +5,8 @@ const { getProducts, getProduct } = require('./controllers/productsController')
 const server = http.createServer((req, res) => {
     if (req.url === '/api/products' && req.method === 'GET') {
         getProducts(req, res)
-    } else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === 'GET') {
+    } else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === 'GET')
+    {
 
         const id = req.url.split('/')[3]
         getProduct(req, res, id)

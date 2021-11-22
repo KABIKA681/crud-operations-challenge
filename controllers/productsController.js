@@ -1,7 +1,6 @@
 const Product = require('../models/productsModel')
 
 
-
 //GET ALL PRODUCTS
 async function getProducts(req, res) {
     try {
@@ -16,7 +15,7 @@ async function getProducts(req, res) {
 //GET SINGLE PRODUCT 
 async function getProduct(req, res, id) {
     try {
-        const product = await Product.findById()
+        const product = await Product.findById(id)
 
         if (!product) {
             res.writeHead(404, { 'Content-Type': 'application/json' })
@@ -26,10 +25,6 @@ async function getProduct(req, res, id) {
             res.end(JSON.stringify(product))
 
         }
-
-
-
-
     } catch (error) {
         console.log(error)
     }

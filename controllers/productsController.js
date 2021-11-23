@@ -36,8 +36,8 @@ async function createProduct(req, res) {
     try {
         const body = await getPostData(req)
 
-        const { title, description, price} = JSON.parse(body)
-        
+        const { title, description, price } = JSON.parse(body)
+
         const product = {
             title,
             description,
@@ -66,28 +66,41 @@ async function updateProduct(req, res, id) {
         } else {
             const body = await getPostData(req)
 
-            const { title, description, price} = JSON.parse(body)
-        
+            const { title, description, price } = JSON.parse(body)
+
             const productData = {
-            title: title || product.title,
-            description: description || product.description,
-            price: price || product.price
-        }
+                title: title || product.title,
+                description: description || product.description,
+                price: price || product.price
+            }
 
             const updProduct = await Product.update(id, productData)
 
             res.writeHead(200, { 'Content-Type': 'Application/json ' })
             return res.end(JSON.stringify(updProduct))
         }
-
-
-        
-
     } catch (error) {
         console.log(error)
     }
 }
+//DELETE PRODUCT 
+async function deleteProduct(req, res, id) {
+    try {
+        const product = await Product.findById(id)
 
+        if (!product) {
+            res.writeHead(404, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({ message: 'Product Not Found' }))
+        } else {
+            await Product.remove(id)
+            res.writeHead(200, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({ message: `Product ${id} has been deleted` }))
+
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
 
@@ -96,5 +109,6 @@ module.exports =
     getProducts,
     getProduct,
     createProduct,
-    updateProduct
+    updateProduct,
+    deleteProduct
 }

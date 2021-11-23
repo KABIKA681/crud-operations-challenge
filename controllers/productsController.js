@@ -1,5 +1,5 @@
 const Product = require('../models/productsModel')
-
+const { getPostData } = require('../helpers')
 
 //GET ALL PRODUCTS
 async function getProducts(req, res) {
@@ -34,27 +34,54 @@ async function getProduct(req, res, id) {
 //POST REQUEST 
 async function createProduct(req, res) {
     try {
+        const body = await getPostData(req)
 
-        let body = ''
-        req.on('data', (chunk) => {
-            body += chunk.toString()
-        })
+        const { title, description, price} = JSON.parse(body)
+        
+        const product = {
+            title,
+            description,
+            price
+        }
 
-        req.on('end', async () => {
-            const { title, description, price } = JSON.parse(body)
+        const newProduct = await Product.create(product)
 
-            const product = {
-                title,
-                description,
-                price
-            }
+        res.writeHead(201, { 'Content-Type': 'Application/json ' })
+        return res.end(JSON.stringify(newProduct))
 
-            const newProduct = await Product.create(product)
-            res.writeHead(201, { 'Content-Type': 'Application/json ' })
-            return res.end(JSON.stringify(newProduct))
-        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//UPDATE A POST 
+//PUT REQUEST 
+async function updateProduct(req, res, id) {
+    try {
+        const product = await Product.findById(id)
+
+        if (!product) {
+            res.writeHead(404, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({ message: 'Product Not Found' }))
+        } else {
+            const body = await getPostData(req)
+
+            const { title, description, price} = JSON.parse(body)
+        
+            const productData = {
+            title: title || product.title,
+            description: description || product.description,
+            price: price || product.price
+        }
+
+            const updProduct = await Product.update(id, productData)
+
+            res.writeHead(200, { 'Content-Type': 'Application/json ' })
+            return res.end(JSON.stringify(updProduct))
+        }
 
 
+        
 
     } catch (error) {
         console.log(error)
@@ -68,5 +95,6 @@ module.exports =
 {
     getProducts,
     getProduct,
-    createProduct
+    createProduct,
+    updateProduct
 }
